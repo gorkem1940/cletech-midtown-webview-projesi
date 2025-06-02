@@ -7,10 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 
 class ZoomedWebViewActivity : AppCompatActivity() {
 
+    private lateinit var webView: WebView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val webView = WebView(this)
+        webView = WebView(this)
         setContentView(webView)
 
         webView.settings.apply {
@@ -51,8 +53,14 @@ class ZoomedWebViewActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        webView.apply {
+            clearHistory()
+            clearCache(true)
+            loadUrl("about:blank")
+            onPause()
+            removeAllViews()
+            destroy()
+        }
         super.onDestroy()
-        // WebView belleğini temizle
-        (findViewById<WebView>(android.R.id.content))?.destroy()
     }
 }
